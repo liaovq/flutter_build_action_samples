@@ -1,0 +1,47 @@
+name: Build test bundle
+
+# can adding branch or path constraints
+on: [push, pull_request]
+
+env:
+  flutter_version: ''
+  java_version: '11'
+
+jobs:
+  build-android-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: chrisdickinson/setup-yq@latest
+      - name: Setup java sdk
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+      - name: Obtain flutter sdk version number
+        run: |
+          flutter_version=$(yq r pubspec.yaml environment.flutter)
+          echo '::debug::${REPO_FLUTTER_VERSION}'
+      - name: Cache flutter dependencies
+        uses: actions/cache@v1
+        with:
+          path: /opt/hostedtoolcache/flutter
+          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}
+      - name: Setup flutter sdk
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.flutter_version }}
+      - name: Flutter sdk version
+        run: flutter --version
+      - run: flutter pub get
+      - run: flutter build apk --profile
+      - name: Upload apk file
+        uses: actions/upload-artifact@v1
+        with:
+          name: test-apk
+          path: build/app/outputs/flutter-apk/app-profile.apk
+
+#  build-ios-bundle:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - run: echo "🎉 TODO."
