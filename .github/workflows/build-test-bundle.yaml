@@ -1,11 +1,7 @@
 name: Build test bundle
 
 # can adding branch or path constraints
-on: [push, pull_request]
-
-env:
-  flutter_version: ''
-  java_version: '11'
+on: [ push, pull_request ]
 
 jobs:
   build-android-apk:
@@ -18,28 +14,40 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '11'
-      - name: Obtain flutter sdk version number
-        run: |
-          flutter_version=$(yq r pubspec.yaml environment.flutter)
-          echo '::debug::${REPO_FLUTTER_VERSION}'
+      - name: Set flutter sdk version number env
+        run: echo "FLUTTER_SDK_VERSION=$(yq r pubspec.yaml environment.flutter)" >> $GITHUB_ENV
+      - run: echo "💡 repo use flutter version is ${{ env.FLUTTER_SDK_VERSION }}."
       - name: Cache flutter dependencies
         uses: actions/cache@v1
         with:
           path: /opt/hostedtoolcache/flutter
-          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}
+          key: ${{ runner.OS }}-flutter-install-cache-${{ env.FLUTTER_SDK_VERSION }}
       - name: Setup flutter sdk
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ env.flutter_version }}
-      - name: Flutter sdk version
-        run: flutter --version
+          flutter-version: ${{ env.FLUTTER_SDK_VERSION }}
+      - run: flutter --version
+      - run: flutter clean
       - run: flutter pub get
+      - run: flutter pub upgrade
       - run: flutter build apk --profile
       - name: Upload apk file
         uses: actions/upload-artifact@v1
         with:
           name: test-apk
           path: build/app/outputs/flutter-apk/app-profile.apk
+      - name: send to telegram
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TG_NOTICE_GROUP_ID }}
+          token: ${{ secrets.TG_TOKEN_LIAO_HELPER_BOT }}
+          message: |
+            flutter_build_action_samples android 测试包
+            branch: ${GITHUB_REF##*/}
+            last commit msg: ${{ github.event.commits[0].message }}
+            last commit author: ${{ github.actor }}
+
+            download with: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
 #  build-ios-bundle:
 #    runs-on: ubuntu-latest
