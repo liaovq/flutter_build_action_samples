@@ -43,9 +43,8 @@ jobs:
           token: ${{ secrets.TG_TOKEN_LIAO_HELPER_BOT }}
           message: |
             flutter_build_action_samples android 测试包
-            branch: ${GITHUB_REF##*/}
-            last commit msg: ${{ github.event.commits[0].message }}
-            last commit author: ${{ github.actor }}
+            brach: ${{ github.head_ref }}
+            last commit info: ${{ github.event.commits[0].message }} - ${{ github.actor }}
 
             download with: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
