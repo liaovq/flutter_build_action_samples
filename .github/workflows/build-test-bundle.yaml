@@ -1,7 +1,10 @@
 name: Build test bundle
 
 # can adding branch or path constraints
-on: [ push, pull_request ]
+on:
+  pull_request:
+    branches:
+      - master
 
 jobs:
   build-android-apk:
@@ -39,13 +42,14 @@ jobs:
           name: action-test-${{ env.APP_VERSION }}
           path: build/app/outputs/flutter-apk/app-profile.apk
       - name: send to telegram
+        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TG_NOTICE_GROUP_ID }}
           token: ${{ secrets.TG_TOKEN_LIAO_HELPER_BOT }}
           message: |
             flutter_build_action_samples android test apk APP_VERSION
-            branch: ${{ steps.extract_branch.outputs.branch }}
+            branch: ${{ github.ref }}
             last commit info: ${{ github.event.commits[0].message }} - ${{ github.actor }}
 
             download with: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
