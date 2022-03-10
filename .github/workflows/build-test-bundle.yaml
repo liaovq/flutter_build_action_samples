@@ -30,11 +30,13 @@ jobs:
       - run: flutter clean
       - run: flutter pub get
       - run: flutter pub upgrade
-      - run: flutter build apk --profile
+      - run: flutter build apk --profile --verbose
+      - run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      - run: echo "APP_VERSION=$(yq r pubspec.yaml version)" >> $GITHUB_ENV
       - name: Upload apk file
         uses: actions/upload-artifact@v1
         with:
-          name: test-apk
+          name: action-test-${{ env.APP_VERSION }}
           path: build/app/outputs/flutter-apk/app-profile.apk
       - name: send to telegram
         uses: appleboy/telegram-action@master
@@ -42,8 +44,8 @@ jobs:
           to: ${{ secrets.TG_NOTICE_GROUP_ID }}
           token: ${{ secrets.TG_TOKEN_LIAO_HELPER_BOT }}
           message: |
-            flutter_build_action_samples android 测试包
-            brach: ${{ github.head_ref }}
+            flutter_build_action_samples android test apk APP_VERSION
+            branch: ${{ steps.extract_branch.outputs.branch }}
             last commit info: ${{ github.event.commits[0].message }} - ${{ github.actor }}
 
             download with: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
