@@ -2,7 +2,7 @@ name: Build test bundle
 
 # can adding branch or path constraints
 on:
-  push:
+  pull_request:
     branches:
       - master
 
