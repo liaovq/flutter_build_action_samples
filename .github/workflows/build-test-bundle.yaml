@@ -2,7 +2,7 @@ name: Build test bundle
 
 # can adding branch or path constraints
 on:
-  pull_request:
+  push:
     branches:
       - master
 
@@ -41,7 +41,7 @@ jobs:
           name: action-test-${{ env.APP_VERSION }}
           path: build/app/outputs/flutter-apk/app-profile.apk
       - name: send to telegram
-        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+#         if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TG_NOTICE_GROUP_ID }}
