@@ -2,7 +2,8 @@ name: Build test bundle
 
 # can adding branch or path constraints
 on:
-  push:
+  pull_request:
+    types: [ opened, edited ]
     branches:
       - master
 
@@ -47,7 +48,7 @@ jobs:
           to: ${{ secrets.TG_NOTICE_GROUP_ID }}
           token: ${{ secrets.TG_TOKEN_LIAO_HELPER_BOT }}
           message: |
-            **flutter_build_action_samples android test apk APP_VERSION**
+            flutter_build_action_samples android test apk APP_VERSION
             branch: ${{ github.ref }}
             last commit info: ${{ github.event.commits[0].message }} - ${{ github.actor }}
 
