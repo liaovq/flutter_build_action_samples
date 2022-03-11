@@ -3,6 +3,7 @@ name: Build test bundle
 # can adding branch or path constraints
 on:
   pull_request:
+    types: [ opened, edited ]
     branches:
       - master
 
