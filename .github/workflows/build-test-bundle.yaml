@@ -29,19 +29,23 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_SDK_VERSION }}
-      - run: flutter --version
-      - run: flutter clean
-      - run: flutter pub get
-      - run: flutter pub upgrade
-      - run: flutter build apk --profile --verbose
-      - run: echo "APP_VERSION=$(yq r pubspec.yaml version)" >> $GITHUB_ENV
-      - name: Upload apk file
-        uses: actions/upload-artifact@v1
-        with:
-          name: action-test-${{ env.APP_VERSION }}
-          path: build/app/outputs/flutter-apk/app-profile.apk
+      - run: echo "💡 commits 0 messge ${{ github.event.commits[0].message }}"
+      - run: echo "💡 pr title ${{ github.event.pull_request.title }}"
+      - run: echo "💡 github ref ${{ github.ref }}"
+      - run: echo "💡 ${{ github.head_ref }} into ${{ github.base_ref }}"
+#      - run: flutter --version
+#      - run: flutter clean
+#      - run: flutter pub get
+#      - run: flutter pub upgrade
+#      - run: flutter build apk --profile --verbose
+#      - run: echo "APP_VERSION=$(yq r pubspec.yaml version)" >> $GITHUB_ENV
+#      - name: Upload apk file
+#        uses: actions/upload-artifact@v1
+#        with:
+#          name: action-test-${{ env.APP_VERSION }}
+#          path: build/app/outputs/flutter-apk/app-profile.apk
       - name: send to telegram
-#         if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+        if: 1 != 1
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TG_NOTICE_GROUP_ID }}
