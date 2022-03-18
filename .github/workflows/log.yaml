@@ -7,8 +7,11 @@ jobs:
   log:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - run: echo "💡 Start"
-      - run: echo "💡 commits 0 ${{ github.event.commits[0].message }}"
-      - run: echo "💡 head_commit message ${{ github.event.head_commit.message }}"
-      - run: git log -1 --pretty=format:"%s"
+      - run: echo "💡 commits 0 is ${{ github.event.commits[0].message }}"
+      - run: echo "💡 head_commit message is ${{ github.event.head_commit.message }}"
+      - run: echo "💡 actor is ${{ github.actor }}"
+      - run: echo "💡 ref is ${{ github.event.ref }}"
+      - run: echo "💡 head_commit is ${{ github.event.head_commit }}"
       - run: echo "💡 End"
