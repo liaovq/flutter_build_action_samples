@@ -42,9 +42,8 @@ jobs:
         with:
           workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.SERVICE_ACCOUNT }}
-      - run: echo "BUILD_APK_TIME=$(date "+%Y-%m-%d-%H_%M")" >> $GITHUB_ENV
-      - run: cd build/app/outputs/flutter-apk/
-      - run: mv ./app-release.apk ./Action-App-release-${{ env.BUILD_APK_TIME }}.apk
+      - run: echo "BUILD_APK_TIME=$(TZ=UTC-8 date "+%Y-%m-%d-%H_%M")" >> $GITHUB_ENV
+      - run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/Action-App-release-${{ env.BUILD_APK_TIME }}.apk
       - name: Upload file
         id: upload-file
         uses: google-github-actions/upload-cloud-storage@v0
