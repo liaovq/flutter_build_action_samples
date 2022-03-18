@@ -10,8 +10,6 @@ jobs:
       - uses: actions/checkout@v2
       - run: echo "💡 Start"
       - run: echo "💡 commits 0 is ${{ github.event.commits[0] }}"
-      - run: echo "💡 commits 1 is ${{ github.event.commits[0][message] }}"
-      - run: echo "💡 commits 2 is ${{ github.event.commits[][message] }}"
       - run: echo "💡 commits 0 message is ${{ github.event.commits[0].message }}"
       - run: echo "💡 head_commit is ${{ github.event.head_commit }}"
       - run: echo "💡 head_commit message is ${{ github.event.head_commit.message }}"
