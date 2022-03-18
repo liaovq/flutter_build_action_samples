@@ -16,4 +16,6 @@ jobs:
       - run: echo "💡 actor is ${{ github.actor }}"
       - run: echo "💡 ref is ${{ github.event.ref }}"
       - run: echo "💡 ref_name is ${{ github.event.ref_name }}"
+      - run: echo "💡 event is ${{toJSON(github.event)}}"
+      - run: echo "💡 github is ${{toJSON(github)}}"
       - run: echo "💡 End"
