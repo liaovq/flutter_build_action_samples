@@ -1,0 +1,14 @@
+name: Console log
+
+on:
+  workflow_dispatch:
+
+jobs:
+  log:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "💡 Start"
+      - run: echo "💡 commits 0 ${{ github.event.commits[0].message }}"
+      - run: echo "💡 head_commit message ${{ github.event.head_commit.message }}"
+      - run: echo "💡 head_commit message ${{ git log -1 --pretty=format:"%s" }}"
+      - run: echo "💡 End"
