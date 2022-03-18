@@ -1,6 +1,5 @@
 name: Build test bundle
 
-# can adding branch or path constraints
 on:
   push:
     branches:
@@ -8,6 +7,9 @@ on:
 
 jobs:
   build-android-apk:
+    permissions:
+      contents: 'read'
+      id-token: 'write'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -29,16 +31,32 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_SDK_VERSION }}
-      - run: echo "💡 commits 0 messge ${{ github.event.commits[0].message }}"
-      - run: echo "💡 pr title ${{ github.event.pull_request.title }}"
-      - run: echo "💡 github ref ${{ github.ref }}"
-      - run: echo "💡 ${{ github.head_ref }} into ${{ github.base_ref }}"
-#      - run: flutter --version
-#      - run: flutter clean
-#      - run: flutter pub get
-#      - run: flutter pub upgrade
-#      - run: flutter build apk --profile --verbose
-#      - run: echo "APP_VERSION=$(yq r pubspec.yaml version)" >> $GITHUB_ENV
+      - run: flutter --version
+      - run: flutter clean
+      - run: flutter pub get
+      - run: flutter pub upgrade
+      - run: flutter build apk --profile --verbose
+      - run: echo "APP_VERSION=$(yq r pubspec.yaml version)" >> $GITHUB_ENV
+      - name: Google auth
+        uses: google-github-actions/auth@v0
+        with:
+          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.SERVICE_ACCOUNT }}
+      - name: Get current time
+        uses: gerred/actions/current-time@master
+        id: current-time
+      - name: Upload file
+        id: upload-file
+        uses: google-github-actions/upload-cloud-storage@v0
+        with:
+          path: build/app/outputs/flutter-apk/app-profile.apk
+          destination: liao-clover/apk/profile/Action-App-${{ steps.current-time.outputs.time }}.apk
+      - run: echo "💡 upload url 1 is ${{ steps.upload-file.outputs.uploaded }}"
+#      - id: uploaded-files
+#        uses: foo/bar@main
+#        env:
+#          file: ${{ steps.upload-file.outputs.uploaded }}
+#      - run: echo "💡 upload url 2 is ${{ steps.upload-file.outputs.uploaded }}"
 #      - name: Upload apk file
 #        uses: actions/upload-artifact@v1
 #        with:
