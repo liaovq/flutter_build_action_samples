@@ -48,8 +48,8 @@ jobs:
         id: upload-file
         uses: google-github-actions/upload-cloud-storage@v0
         with:
-          path: Action-App-Test-${{ env.BUILD_APK_TIME }}.apk
-          destination: liao-clover/apk/release
+          path: build/app/outputs/flutter-apk/Action-App-release-${{ env.BUILD_APK_TIME }}.apk
+          destination: liao-clover/apk/test
       - run: echo "💡 upload url 1 is ${{ steps.upload-file.outputs.uploaded }}"
 #      - id: uploaded-files
 #        uses: foo/bar@main
