@@ -45,13 +45,13 @@ jobs:
       - name: Get current time
         uses: gerred/actions/current-time@master
         id: current-time
-      - run: mv build/app/outputs/flutter-apk/app-profile.apk build/app/outputs/flutter-apk/Action-App-${{ steps.current-time.outputs.time }}.apk.apk
+      - run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/Action-App-release-${{ steps.current-time.outputs.time }}.apk.apk
       - name: Upload file
         id: upload-file
         uses: google-github-actions/upload-cloud-storage@v0
         with:
-          path: build/app/outputs/flutter-apk/app-profile.apk
-          destination: liao-clover/apk/profile
+          path: build/app/outputs/flutter-apk/Action-App-release-${{ steps.current-time.outputs.time }}.apk.apk
+          destination: liao-clover/apk/release
       - run: echo "💡 upload url 1 is ${{ steps.upload-file.outputs.uploaded }}"
 #      - id: uploaded-files
 #        uses: foo/bar@main
