@@ -1,9 +1,7 @@
 name: Build test bundle
 
 on:
-  push:
-    branches:
-      - master
+  workflow_dispatch:
 
 jobs:
   build-android-apk:
@@ -51,6 +49,11 @@ jobs:
           path: build/app/outputs/flutter-apk/Action-App-release-${{ env.BUILD_APK_TIME }}.apk
           destination: liao-clover/apk/test
       - run: echo "💡 upload url 1 is ${{ steps.upload-file.outputs.uploaded }}"
+      - run: echo "💡 download url 1 is https://storage.cloud.google.com/liao-clover/${{ steps.upload-file.outputs.uploaded }}"
+      - run: echo "💡 head_ref ${{ github.head_ref }}"
+      - run: echo "💡 ref ${{ github.ref }}"
+      - run: echo "💡 commits 0 ${{ github.event.commits[0].message }}"
+      - run: echo "💡 head_commit.message ${{ github.event.head_commit.message }}"
 #      - id: uploaded-files
 #        uses: foo/bar@main
 #        env:
