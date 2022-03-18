@@ -10,5 +10,5 @@ jobs:
       - run: echo "💡 Start"
       - run: echo "💡 commits 0 ${{ github.event.commits[0].message }}"
       - run: echo "💡 head_commit message ${{ github.event.head_commit.message }}"
-      - run: echo "💡 head_commit message ${{ git log -1 --pretty=format:"%s" }}"
+      - run: git log -1 --pretty=format:"%s"
       - run: echo "💡 End"
