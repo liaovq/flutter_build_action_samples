@@ -7,10 +7,16 @@ jobs:
   deployment:
     runs-on: macos-latest
     steps:
+      - name: Obtain flutter sdk version
+        run: |
+          echo "VERSION=11111" >> $GITHUB_ENV
+          echo "💡 repo use flutter version is ${{ env.FLUTTER_SDK_VERSION }}"
       - name: test request tg
         uses: fjogeleit/http-request-action@v1
         with:
           url: 'https://api.telegram.org/bot${{ secrets.TG_TOKEN_LIAO_HELPER_BOT }}/sendMessage'
           method: 'POST'
-          chat_id: ${{ secrets.TG_NOTICE_GROUP_ID }}
-          text: 'title%0A%0Acontent'
+          data: '{"chat_id": ${{ secrets.TG_NOTICE_GROUP_ID }}, "text": "
+          title\n\n
+          content: ${{ env.VERSION }}
+          "}'
